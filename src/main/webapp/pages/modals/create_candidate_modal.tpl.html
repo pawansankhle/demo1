@@ -1,0 +1,92 @@
+<div class="modal-header bottom-border">
+     <h3 class="modal-title">Add Candidate</h3>
+</div>
+<div class="modal-body">
+	<div class="row" ng-init="isAddCandidate = false">
+	  <div class="col-sm-12" >
+	     <form  name="candidateCreateForm"  ng-init="disable=false" style="padding: 20px 10px 20px 10px;"
+				 novalidate >
+					<div class="alert alert-danger alert-dismissible" ng-show="errorDialog">{{message }}</div>
+						<div class="row">
+							<div class="form-group col-sm-6">
+								<label for="First Name" class="control-label">First Name</label> 
+								<input autocomplete="off" id="candidate.firstName"
+											class="form-control" ng-model="candidate.firstName" />
+							</div>
+							<div class="form-group col-sm-6">
+										<label for="Last Name" class="control-label">Last Name</label> 
+										<input autocomplete="off" id="candidate.lastName"
+											class="form-control" ng-model="candidate.lastName" />
+							</div>
+						</div>
+						<div class="row">
+								<div class="form-group col-sm-6">
+									<label for="Contact Number" class="control-label">Contact Number</label> 
+									<input autocomplete="off" id="candidate.contactNumber"
+										class="form-control" ng-model="candidate.contactNumber" />
+								</div>
+								<div class="form-group col-sm-6">
+									<label for="Email Id" class="control-label">Email Id</label> 
+									<input autocomplete="off" id="candidate.email"
+										class="form-control" ng-model="candidate.email" />
+								</div>
+						</div>
+						<div class="row">
+								<div class="form-group col-sm-6">
+									<label for="Qualification" class="control-label">Qualification</label> 
+									<input autocomplete="off" id="candidate.qualification"
+										class="form-control" ng-model="candidate.qualification" />
+								</div>
+								<div class="form-group col-sm-6">
+									<label for="Address" class="control-label">Address</label> 
+									<input autocomplete="off" id="candidate.addressLine1"
+										class="form-control" ng-model="candidate.address.addressLine1" />
+								</div>
+						</div>
+						<div class="row">
+								<div class="form-group col-sm-6">
+									<label for="City" class="control-label">City</label> 
+									<input autocomplete="off" class="form-control" ng-model="candidate.address.city" />
+								</div>
+								<div class="form-group col-sm-6">
+									<label for="state" class="control-label">State</label> 
+									<input autocomplete="off" class="form-control" ng-model="candidate.address.state" />
+								</div>
+						</div>
+						<div class="row">
+								<div class="form-group col-sm-6">
+									<label for="Company Name" class="control-label">Company Name</label> 
+									<input autocomplete="off" class="form-control" ng-model="company.companyName" />
+								</div>
+						
+								<div class="form-group col-sm-6">
+									<label for="Company Address" class="control-label">Company Address</label> 
+									<input autocomplete="off" class="form-control" ng-model="company.companyAddress" />
+								</div>
+						</div>
+						<div class="row">
+								<div class="form-group col-sm-6">
+									<label for="currentPackage" class="control-label">currentPackage</label> 
+									<input autocomplete="off" id="company.currentPackage"
+										class="form-control" ng-model="company.currentPackage" />
+								</div>
+							<div class="form-group col-sm-6">
+									<label for="experience" class="control-label">experience</label> 
+									<input autocomplete="off" id="company.experience"
+										class="form-control" ng-model="company.experience" />
+								</div>
+						</div>
+						<div style="margin-left: 128px;" ng-show="isLoginLoading">	
+										<i class="fa fa-spinner fa-pulse fa-fw fa-3x"></i>
+	                                    <span class="sr-only">Loading...</span>
+	                    </div>
+					</div>
+				</form>
+
+	     </div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-success btn-raised" ng-click="createCandidate(candidate);">Create</button>
+	<button class="btn btn-warning btn-raised" ng-click="close();">Cancle</button>
+</div>

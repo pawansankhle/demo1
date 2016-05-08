@@ -1,0 +1,62 @@
+<div class="row" ng-init="isAddOrder = false">
+  <div class="col-sm-12 bottom-border">
+     <div class="bs-component">
+        <div class="panel">
+           <div class="panel-heading">
+                <div>Search
+                <button class="btn btn-success pull-right btn-raised" disabled ng-click="CandidateBulkUplad();" style="margin-top:-8px"><i class="fa fa-upload"></i>Bulk Upload</button>
+                <button class="btn btn-success pull-right btn-raised" ng-click="addCandidate();" style="margin-top:-8px"><i class="fa fa-plus"></i>Add Candidate</button></div>
+                 
+            </div>
+
+           <div class="panel-body">
+	           	<form>
+	           	  <!-- <div class="form-group col-sm-3 right-border" style="margin:0px">
+	                 <select name="status" class="form-control" ng-model="filter.category" ng-change="search()">
+	                    <option value="">--select--</option>
+	                    <option ng-repeat="category in categoryList" value="{{category.id}}">{{category.name}}</option>
+
+	                 </select>
+	              </div> -->
+	              <div class="form-group col-sm-3" style="margin:0px">
+	                  <input type="text" class="form-control" placeholder="Search by Registration ID" ng-model="filter.registerId" ng-change="search()">
+	              </div>
+	              <!-- <div class="form-group col-sm-3" style="margin:0px">
+	                  <input type="text" class="form-control" placeholder="Search by name" ng-model="filter.name" ng-change="search()">
+	              </div> -->
+	              <div class="form-group  col-sm-3" style="margin:0px">
+                  <button title="Filter" class="btn btn-sm btn-raised btn-success" ng-click="search()"><i class="fa fa-filter"></i>Go</button>
+                  <button title="Reset Filter" class="btn btn-raised btn-warning" ng-click="resetFilter()"><i class="fa fa-refresh pull-right"></i></button>
+                </div>
+	            </form>
+           </div>
+        </div>
+      </div>
+     <div class="col-sm-12 card">
+		 <table class="table table-responsive">
+	      <thead>
+	          <th>Registration Number</th>
+	          <th>Name</th>
+	          <th>Contact Details</th>
+	          <th>Qualification </th>
+	          <th></th>
+              <th></th>
+	          
+	      </thead>
+	      <tbody>
+	        <tr ng-if="candidateList.length == 0"><td md-cell colspan="5" style="text-align: center;"><b>No  Data Found</b></td></tr>
+	        <tr ng-repeat="candidate in candidateList">
+	          <td>{{candidate.id}}</td>
+	          <td>{{candidate.firstName+ "  " +candidate.lastName}}</td>
+	          <td>  <div>abc{{ candidate.email}}</div>
+            <div class="color-54 ln-24">pqr{{ user.telephone }}</div></td>
+	          <td>{{candidate.qualification }}</td>
+	          <td>
+	            <button ng-click="openCandiateDetail(candidate);"  class="btn btn-success btn-sm btn-raised">View</button>
+	          </td>
+	         </tr>
+	      </tbody>
+	    </table>
+	   </div>
+  </div>
+</div>

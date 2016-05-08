@@ -1,0 +1,120 @@
+<div class="row" ng-init="isAddOrder = false">
+  <div class="col-sm-12 bottom-border">
+     <div class="bs-component">
+        <div class="panel panel-inverse" ng-init="isEditCandidateDetail = true">
+           <div class="panel-heading">
+              <h5>Candidate Personal Information</h5>
+              <button class="btn btn-primary pull-right fa fa-pencil" ng-show="isEditCandidateDetail" ng-click="isEditCandidateDetail =!isEditCandidateDetail" style="color:white;margin-top:-30px">Edit</button>
+              <button class="btn btn-primary pull-right" ng-show="!isEditCandidateDetail" ng-click="isEditCandidateDetail =!isEditCandidateDetail" style="color:white;margin-top:-30px">Cancel</button>
+              <button class="btn btn-primary pull-right" ng-show="!isEditCandidateDetail" ng-click="isEditCandidateDetail =!isEditCandidateDetail;updateCandidate()" style="color:white;margin-top:-30px">Save</button>
+   
+          </div>
+
+           <div class="panel-body">
+	         <form name="candidatePersonalinfoform">
+            <div class="col-sm-6">
+                <div class="form-group">
+                  <label  class="control-label"> First Name</label>
+                  <input  maxlength="30" class="form-control" ng-disabled="isEditCandidateDetail" ng-model="currentCandidate.firstName" />
+                </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <label  class="control-label"> Last Name</label>
+                  <input  maxlength="30" class="form-control" ng-model="currentCandidate.lastName" ng-disabled="isEditCandidateDetail" />
+                </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">Email</label>
+                  <input tyle="email" class="form-control" maxlength="50" ng-model="currentCandidate.email" ng-disabled="isEditCandidateDetail" />
+                </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <label  class="control-label">Mobile</label>
+                  <input class="form-control" ng-model="currentCandidate.contactNumber" ng-disabled="isEditCandidateDetail" />
+                </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <label  class="control-label">Qualification</label>
+                  <input class="form-control" ng-model="currentCandidate.qualification" ng-disabled="isEditCandidateDetail" />
+                </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <label  class="control-label">State</label>
+                  <input class="form-control" ng-model="currentCandidate.address.state" ng-disabled="isEditCandidateDetail" />
+                </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <label  class="control-label">City</label>
+                  <input class="form-control" ng-model="currentCandidate.address.city" ng-disabled="isEditCandidateDetail" />
+                </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <label  class="control-label">Pincode</label>
+                  <input class="form-control" ng-model="currentCandidate.address.pincode" ng-disabled="isEditCandidateDetail" />
+                </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <label  class="control-label">Address Line1</label>
+                  <input class="form-control" ng-model="currentCandidate.address.addressLine1" ng-disabled="isEditCandidateDetail" />
+                </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <label  class="control-label">Address Line2</label>
+                  <input class="form-control" ng-model="currentCandidate.address.addressLine2"  ng-disabled="isEditCandidateDetail" />
+                </div>
+          </div>
+        </form>
+           </div>
+        </div>
+        <div class="panel panel-inverse" ng-init="isEditCandidateDetail = true">
+           <div class="panel-heading">
+              <h5>Candidate Companay Information</h5>
+              <button class="btn btn-primary pull-right fa fa-pencil" ng-show="isEditCandidateDetail" ng-click="isEditCandidateDetail =!isEditCandidateDetail" style="color:white;margin-top:-30px">Edit</button>
+              <button class="btn btn-primary pull-right" ng-show="!isEditCandidateDetail" ng-click="isEditCandidateDetail =!isEditCandidateDetail" style="color:white;margin-top:-30px">Cancel</button>
+              <button class="btn btn-primary pull-right" ng-show="!isEditCandidateDetail" ng-click="isEditCandidateDetail =!isEditCandidateDetail;updateCandidate()" style="color:white;margin-top:-30px">Save</button>
+   
+          </div>
+          <div class="panel-body">
+           <form name="candidateCompanydetailform">
+            <div ng-repeat="company in currentCandidate.companyDetails">
+              <div class="col-sm-6" >
+                  <div class="form-group">
+                    <label  class="control-label">Company Name</label>
+                    <input  ng-disabled="isEditCandidateDetail" maxlength="300" class="form-control" ng-model="company.companyName" />
+                  </div>
+              </div>
+              <div class="col-sm-6" >
+                  <div class="form-group">
+                    <label class="control-label">Company Address</label>
+                    <input ng-disabled="isEditCandidateDetail" class="form-control"  ng-model="company.companyAddress" />
+                  </div>
+              </div>
+              <div class="col-sm-6" >
+                  <div class="form-group">
+                    <label  class="control-label">Current Package</label>
+                    <input  ng-disabled="isEditCandidateDetail"  class="form-control"  ng-model="company.currentPackage" />
+                  </div>
+              </div>
+              <div class="col-sm-6" >
+                  <div class="form-group">
+                    <label  class="control-label">Experience</label>
+                    <input  ng-disabled="isEditCandidateDetail"  class="form-control"  ng-model="company.experience" />
+                 </div>
+               </div>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+      <a ui-sref="candidate" ><i title="Back" class="fa fa-chevron-circle-left pull-left btm-fixed-back"></i></a>
+ 
+</div>

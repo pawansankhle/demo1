@@ -1,0 +1,24 @@
+.btm-fixed-back
+{
+	font-size: 40px;
+    position: fixed;
+    top: 73;
+    bottom: 0;
+    color: #252525;
+}
+
+.bottom-border{
+  border-bottom:1px solid #ddd
+}
+
+.top-border{
+  border-top:1px solid #ddd
+}
+
+.right-border{
+  border-right:1px solid #ddd
+}
+
+.left-border{
+  border-left:1px solid #ddd
+}

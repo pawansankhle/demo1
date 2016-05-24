@@ -1,34 +1,22 @@
 
 package com.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import java.util.*;
-
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Transactional;
-
-
-import org.hibernate.exception.ConstraintViolationException;
-
-import org.springframework.dao.EmptyResultDataAccessException;
-import javax.persistence.NoResultException;
-
+import javax.validation.Valid;
 
 import org.apache.cxf.jaxrs.ext.search.SearchContext;
+import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.dao.ICandidateDao;
 import com.demo.model.Candidate;
-import com.demo.model.Roles;
 import com.demo.service.ICandidateService;
-
-import javax.validation.Valid;
+import com.demo.util.ExcelUtils;
 
 
 /**
@@ -51,7 +39,7 @@ public class CandidateServiceImpl  implements ICandidateService {
   
  
  @Autowired
- private ICandidateDao candidateDao;
+ private ICandidateDao dao;
 	
 			/**
 	 * 
@@ -155,7 +143,7 @@ public class CandidateServiceImpl  implements ICandidateService {
     logger.info("Create record by tag : "+candidate);
 		try{	
 					
-			candidate=candidateDao.create(candidate);
+			candidate=dao.create(candidate);
 	        return candidate;
     	
     	}catch(Exception ex)
@@ -180,7 +168,7 @@ public class CandidateServiceImpl  implements ICandidateService {
 	public Candidate update(@Valid Candidate candidate) {
 	logger.info("Update record of Candidate of Id : "+candidate.getId());	
 		try{
-				return candidateDao.update(candidate);
+				return dao.update(candidate);
 			}catch(Exception ex)
 		{
 			logger.error("Error  occurred  @class"   + this.getClass().getName()+" @Method :update()" , ex);
@@ -194,7 +182,7 @@ public class CandidateServiceImpl  implements ICandidateService {
 	
 
   public Long getTotalCount(){
-				return candidateDao.getTotalCount();
+				return dao.getTotalCount();
 	}
 
 @Override
@@ -208,12 +196,41 @@ public List<Candidate> search(SearchContext context, Integer upperLimit,
 		Integer lowerLimit, String orderBy, String orderType) {
 	logger.info("Inside CandidateServiceImpl @Method: search @Param : context:"+context+" upperLimit:"+upperLimit+" lowerLimit:"+lowerLimit+" orderBy:"+orderBy+" orderType: "+orderType);
 	try{
-		return candidateDao.search(context, lowerLimit, upperLimit, orderBy, orderType);
+		return dao.search(context, lowerLimit, upperLimit, orderBy, orderType);
 	}catch(Exception ex){
 		  ex.printStackTrace();
 		  return null;
 	}
 	
+}
+
+@Override
+public void bulkUploadCandidate(Row record) throws Exception {
+	logger.info("Inside  @class :" + this.getClass().getName()+ " @Method :bulkUploadCandidate entry...");
+	
+    Candidate candidate = new Candidate();
+	String firstname=ExcelUtils.getColumnByIndex(record,0);
+	String lastname=ExcelUtils.getColumnByIndex(record,1);
+	String mobile=ExcelUtils.getColumnByIndex(record,2);		
+	String email=ExcelUtils.getColumnByIndex(record,3);
+	
+	if(firstname.isEmpty() || firstname == null){
+		throw new Exception("FirstName can not be blank at row number "+record.getRowNum());
+	}else if(lastname.isEmpty() || lastname == null){
+		throw new Exception("LastName can not be blank at row number "+record.getRowNum());
+	}else if(mobile.isEmpty() || mobile == null){
+		throw new Exception("Mobile can not be blank at row number "+record.getRowNum());
+	}else if(email.isEmpty() || email == null){
+		throw new Exception("email can not be blank at row number "+record.getRowNum());
+	}
+	
+    candidate.setFirstName(firstname);
+    candidate.setLastName(lastname);
+    candidate.setContactNumber(mobile);
+    candidate.setEmail(email);
+    
+    dao.create(candidate);
+   	
 }
 
 	/*@Override

@@ -5,6 +5,7 @@ import java.util.List;
 import com.demo.model.Candidate;
 
 import org.apache.cxf.jaxrs.ext.search.SearchContext;
+import org.apache.poi.ss.usermodel.Row;
 
 /**
  * 
@@ -21,6 +22,7 @@ Candidate update(Candidate candidate);
 List<Candidate> search(Candidate candidate);
 public List<Candidate> search(SearchContext context, Integer upperLimit,
 		Integer lowerLimit, String orderBy, String orderType);
+public void bulkUploadCandidate(Row row) throws Exception;
 		
 
 }

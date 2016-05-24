@@ -1,32 +1,36 @@
 package com.demo.rest.impl;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Date;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import javax.validation.Valid;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import org.apache.cxf.jaxrs.ext.search.SearchContext;
 
+import net.minidev.json.JSONObject;
+
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
+import org.apache.cxf.jaxrs.ext.search.SearchContext;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.model.Candidate;
-import com.demo.model.Users;
 import com.demo.service.ICandidateService;
-
-import javax.validation.Valid;
+import com.demo.util.ExcelUtils;
  
 /**
  * 
@@ -43,7 +47,7 @@ public class CandidateRestImpl{
 private Logger logger=LoggerFactory.getLogger(CandidateRestImpl.class);
 	
 	@Autowired
-	private ICandidateService candidateService;
+	private ICandidateService service;
 
 		
 	@Context
@@ -64,7 +68,7 @@ private Logger logger=LoggerFactory.getLogger(CandidateRestImpl.class);
 	@GET
 	public List<Candidate> search(@QueryParam("") Candidate candidate) {
 		try{
-		return candidateService.search(candidate);
+		return service.search(candidate);
 		}catch(Exception ex)
 		{
 			logger.error("Error  occurred  @class"   + this.getClass().getName()  , ex);
@@ -87,7 +91,7 @@ private Logger logger=LoggerFactory.getLogger(CandidateRestImpl.class);
 	@Path("search")
 	public List<Candidate> search(@QueryParam("llimit") Integer lowerLimit, @QueryParam("ulimit") Integer upperLimit,@QueryParam("orderBy") String orderBy,@QueryParam("orderType") String orderType){
 			try{
-			return candidateService.search(context,upperLimit,lowerLimit,orderBy,orderType);
+			return service.search(context,upperLimit,lowerLimit,orderBy,orderType);
 			}
 			catch(Exception ex)
 			{
@@ -115,7 +119,7 @@ private Logger logger=LoggerFactory.getLogger(CandidateRestImpl.class);
 		logger.info("Create record for Canddate : "+candidate);
 		//Users username =CustomerInfo.getUserInContext();
 		try{
-				return candidateService.create(candidate);
+				return service.create(candidate);
 		 }catch(Exception ex)
 			{
 			logger.error("Error  occurred  @class"   + this.getClass().getName()  , ex);
@@ -140,7 +144,7 @@ private Logger logger=LoggerFactory.getLogger(CandidateRestImpl.class);
 	logger.info("Update record for candidate by id : "+candidate.getId());
 	//Users username =CustomerInfo.getUserInContext();
 	try{
-		Candidate newCandidate = candidateService.update(candidate);
+		Candidate newCandidate = service.update(candidate);
 				
 					
 				
@@ -219,7 +223,7 @@ private Logger logger=LoggerFactory.getLogger(CandidateRestImpl.class);
 	@GET
 	@Path("totalCount")
       public Long getTotalCount(){
-				return candidateService.getTotalCount();
+				return service.getTotalCount();
 	}
 	
 	
@@ -228,7 +232,7 @@ private Logger logger=LoggerFactory.getLogger(CandidateRestImpl.class);
 	@Produces("application/json")
     public Integer getSearchRecordCount(){	
 		try{
-			return candidateService.getSearchRecordCount(context);
+			return service.getSearchRecordCount(context);
 		}catch(Exception ex)
 		{
 			logger.error("Error  occurred  @class"   + this.getClass().getName()  , ex);
@@ -239,7 +243,105 @@ private Logger logger=LoggerFactory.getLogger(CandidateRestImpl.class);
 		
 	}
 	
-	
+    @POST
+	@Path("bulkUploadCandidate")
+	@Consumes("multipart/form-data")
+	@Produces("text/html")
+	public String bulkUploadCandidate(@Multipart(value = "filedata") InputStream in,@QueryParam(value = "filename") String fileName) throws Exception {
+	logger.info("Inside  @class" + this.getClass().getName()+ " @Method : bulkUploadCandidate @Param filePath " + fileName);
+		File fileNew = new File(fileName);
+		List<JSONObject> jsonExceptionList = new java.util.ArrayList<JSONObject>();
+		int success = 0;
+		int failure = 0;
+		try {
+
+			XSSFWorkbook workbook = new XSSFWorkbook(in);
+			XSSFSheet sheet = workbook.getSheetAt(0);
+			JSONObject exceptionMessage = new JSONObject();
+			Iterator<Row> rowIterator = sheet.iterator();
+
+			String headerNotMatch = ExcelUtils.checkExcelImportHeaderFormat(sheet,getCandidteImportFileHeader());
+			if (headerNotMatch.isEmpty()) {
+				int j = 0;
+				boolean isMaxRecord=false;
+				while (rowIterator.hasNext()) 
+				{
+					Row row = null;
+					try 
+					{
+						if(j>100){
+							isMaxRecord=true;
+							throw (new Exception("Maximum 100 records can be uploaded at a time "));
+						}
+						row = rowIterator.next();
+						if(ExcelUtils.isEmptyRow(row)){
+							if (j != 0) {
+								
+								service.bulkUploadCandidate(row);
+								++success;
+							}
+						}
+						j++;	
+					}catch (Exception e) {
+						j++;
+						exceptionMessage=new JSONObject();
+						logger.error("Error  occurred  @class"+this.getClass().getName()+" @Method : bulkUploadCandidate ",e);		
+						String msg="";
+						if(e.getMessage()!=null)
+						{
+							msg=msg+e.getMessage();
+						}
+						if(msg==null || msg.equals("")){
+							msg="Please import .xls with proper format";
+						}
+						exceptionMessage.put("error",msg);						
+						jsonExceptionList.add(exceptionMessage);
+						if(isMaxRecord){
+							break;
+						}
+						failure++;			
+						//throw new RestException(ExceptionUtil.generateExceptionCode("Rest","Issue",e,j));
+					}finally{
+						 logger.info("Inside @class:"+this.getClass().getName()+" @method :bulkUploadIssue with Finally Block 1");
+					}
+				}
+			}else
+			{
+				exceptionMessage.put("error",headerNotMatch);
+				jsonExceptionList.add(exceptionMessage);
+				return "{\"status\":\"200\",\"excpmesg\":"+jsonExceptionList.toString()+"}";
+			}
+
+			fileNew.delete();
+			exceptionMessage=new JSONObject();
+			exceptionMessage.put("success",success);
+			exceptionMessage.put("failure",failure);
+			exceptionMessage.put("Total",(success+failure));
+			jsonExceptionList.add(exceptionMessage);
+			if (!jsonExceptionList.isEmpty()) {
+				return "{\"status\":\"200\",\"excpmesg\":"+ jsonExceptionList.toString() + "}";
+			}
+		} catch (Exception e) {
+			logger.error("Error  occurred  @class" + this.getClass().getName()
+					+ " @Method : bulkUploadCandidate ", e);
+
+		}finally{
+			 logger.info("Inside @class:"+this.getClass().getName()+" @method :bulkUploadCandidate with Finally Block 2");
+		}
+		return "{\"data\":\"Candidate Uploaded successfully\"}";
+
+	}
+
+
+private List<String> getCandidteImportFileHeader() {
+		List<String> list = new ArrayList<String>();
+		list.add("FIRSTNAME");
+		list.add("LASTNAME");
+		list.add("MOBILE");
+		list.add("EMAIL");
+		return list;
+	}
+
 
 
 

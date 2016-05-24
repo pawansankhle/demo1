@@ -59,6 +59,7 @@
        <script src="js/services/authService.js"></script>
        <script src="js/services/sessionService.js"></script>
        <script src="js/services/candidateService.js"></script>
+       <script src="js/services/fileUploadService.js"></script>
 
        
        <!-- controllers -->
@@ -66,7 +67,11 @@
        <script src="js/controllers/homeCorouselController.js"></script>
        <script src="js/controllers/CandidateController.js"></script>
        <script src="js/controllers/userAuthController.js"></script>
-         <script src="js/controllers/CreateCandidateController.js"></script>
+      <script src="js/controllers/CreateCandidateController.js"></script>
+
+      <!-- directives -->
+      <script src="js/directives/js/imageUpload.js"></script>
+
 
       
 

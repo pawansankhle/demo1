@@ -3,5 +3,6 @@ app.constant('TEMPLATES',{
     candidateTpl : 'pages/candidate.tpl.html',
     candidateDetailTpl : 'pages/candidate_detail.tpl.html',
     loginTplPath : 'pages/auth/login.tpl.html',
-    createCandidateTpl : 'pages/modals/create_candidate_modal.tpl.html'
+    createCandidateTpl : 'pages/modals/create_candidate_modal.tpl.html',
+    candidateBulkUploadTplPath : 'pages/modals/candidate_bulk_upload_modal.tpl.html',
 })

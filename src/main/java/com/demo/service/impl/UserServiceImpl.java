@@ -63,6 +63,10 @@ public class UserServiceImpl implements IUsersService{
 		}catch(org.springframework.security.core.AuthenticationException ex){
 			logger.error("@class UserServiceImpl @method Customlogin  cause: "+ex.toString());
 			return null;
+		}catch(Exception ex){
+			ex.printStackTrace();
+			logger.error("@class UserServiceImpl @method Customlogin  cause: "+ex.toString());
+			
 		}
 		return null;
 	}

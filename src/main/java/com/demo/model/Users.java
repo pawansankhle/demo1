@@ -71,7 +71,8 @@ public class Users {
 
 	@Basic
 	private Boolean deleted;
-	@OneToOne(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	
+	@OneToOne(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
 	@JoinColumn(name="user_address")
 	private Address userAddress;
 	

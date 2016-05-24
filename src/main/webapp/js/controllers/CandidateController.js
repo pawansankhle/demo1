@@ -30,7 +30,7 @@ app.controller('candidateCtrl',['$scope','CandidateSrv','TEMPLATES','$uibModal',
 	$scope.close = function()
 	{
    	  $uibModalStack.dismissAll();
-   	}
+  }
 
    	$scope.openCandiateDetail = function(obj,index)
    	{
@@ -39,18 +39,31 @@ app.controller('candidateCtrl',['$scope','CandidateSrv','TEMPLATES','$uibModal',
          $state.go(STATS.CANDIDATE_DETAIL,{name});
    	};
 
-    $scope.search = function(){
+    $scope.search = function() {
          $scope.getListOfCandidates($scope.filter,0,100);
      }
 
-    $scope.resetFilter = function()
-    {
+    $scope.resetFilter = function() {
         $scope.filter = 
         {
              registerId : '',
         }
         $scope.getListOfCandidates(null,0,10);
-    }
+    };
+
+    $scope.CandidateBulkUplad = function() {
+        console.log('in fun');
+         var modelInstance = $uibModal.open({
+        animation: true,
+        templateUrl: TEMPLATES.candidateBulkUploadTplPath,
+        controller: 'candidateBulkUploadCtrl',
+        size: 'sm',
+            
+        });
+
+    };
+
+    
 	
 	$scope.getListOfCandidates(null,0,10);
 }])
@@ -75,3 +88,26 @@ app.controller('candidateCtrl',['$scope','CandidateSrv','TEMPLATES','$uibModal',
 
       
 }])
+
+.controller('candidateBulkUploadCtrl',['$scope','$uibModalStack','fileUploadSrv','URLS',function($scope, $uibModalStack,fileUploadSrv,URLS){
+
+     
+
+  $scope.close = function() {
+    $uibModalStack.dismissAll();
+    
+   };
+
+  $scope.upload = function(){
+    var file = fileUploadSrv.getCurretnFile();
+    console.log($scope.fileName);
+    var url = URLS.CANDIDATE_BULK_UPLOAD_URL+"?filename="+$scope.fileName;
+    
+    if(hasValue(file) && hasValue(url)) {
+         fileUploadSrv.uploadFile(file,url);
+    }
+
+
+  }
+
+}]);

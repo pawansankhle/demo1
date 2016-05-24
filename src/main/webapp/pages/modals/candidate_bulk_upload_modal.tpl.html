@@ -1,0 +1,23 @@
+<div class="modal-header bottom-border">
+     <h3 class="modal-title">Add Candidate</h3>
+</div>
+<div class="modal-body">
+	<div class="row" ng-init="isAddCandidate = false">
+	  <div class="col-sm-12" >
+	     <form  name="candidatebulkupload"  ng-init="disable=false" style="padding: 20px 10px 20px 10px;"
+				 novalidate >
+					<div class="alert alert-danger alert-dismissible" ng-show="errorDialog">{{message }}</div>
+						<div class="row">
+							<div class="form-group col-sm-12">
+							    <upload-file></upload-file>
+						    </div>
+					    </div>
+		  </form>
+
+	     </div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-success btn-raised" ng-click="upload();">Upload</button>
+	<button class="btn btn-warning btn-raised" ng-click="close();">Cancle</button>
+</div>
